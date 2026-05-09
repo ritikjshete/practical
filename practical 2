@@ -1,0 +1,92 @@
+# Install gensim
+!pip install gensim
+
+
+# Step-1: Import Libraries
+import numpy as np
+import pandas as pd
+import nltk
+
+nltk.download('punkt')
+
+from nltk.tokenize import word_tokenize
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from gensim.models import Word2Vec
+
+
+# Step-2: Sample Data
+documents = [
+    "I love machine learning",
+    "Machine learning is amazing",
+    "I love coding in Python",
+    "Python is great for data science"
+]
+
+print("Documents:\n", documents)
+
+
+# ---------------------------------------------------
+# Step-3: Bag of Words
+# ---------------------------------------------------
+
+# Count Occurrence (BoW)
+vectorizer = CountVectorizer()
+
+X = vectorizer.fit_transform(documents)
+
+print("\n--- Bag of Words (Count Occurrence) ---")
+print("Vocabulary:", vectorizer.get_feature_names_out())
+print("Matrix:\n", X.toarray())
+
+
+# Normalized Count
+X_array = X.toarray()
+
+normalized_X = X_array / X_array.sum(axis=1, keepdims=True)
+
+print("\nNormalized Bag of Words")
+print(normalized_X)
+
+
+# ---------------------------------------------------
+# Step-4: TF-IDF
+# ---------------------------------------------------
+
+tfidf = TfidfVectorizer()
+
+X_tfidf = tfidf.fit_transform(documents)
+
+print("TF-IDF\n")
+print("Vocabulary:\n", tfidf.get_feature_names_out())
+print("Matrix:\n", X_tfidf.toarray())
+
+
+# ---------------------------------------------------
+# Step-5: Word2Vec
+# ---------------------------------------------------
+
+# Tokenize sentences
+tokenized_docs = [word_tokenize(doc.lower()) for doc in documents]
+
+
+# Train Word2Vec model
+model = Word2Vec(
+    sentences=tokenized_docs,
+    vector_size=50,
+    window=2,
+    min_count=1,
+    workers=4
+)
+
+
+print("Word2Vec Embeddings\n")
+
+# Example: Get vector for a word
+word = "machine"
+
+print(f"Vector for '{word}':\n", model.wv[word])
+
+
+# Similar words
+print("\nWords similar to 'machine':")
+print(model.wv.most_similar("machine"))

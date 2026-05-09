@@ -1,0 +1,91 @@
+# Import Libraries
+import nltk
+
+# Download required resources (run once)
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
+from nltk.tokenize import (
+    word_tokenize,
+    wordpunct_tokenize,
+    TreebankWordTokenizer,
+    TweetTokenizer,
+    MWETokenizer
+)
+
+from nltk.stem import PorterStemmer, SnowballStemmer
+from nltk.stem import WordNetLemmatizer
+
+
+# Sample Text
+text = "Hello! My name is Nikki. I'm learning NLP with NLTK. It's fun :) #AI #MachineLearning"
+
+print("Original Text:\n", text)
+
+
+# ---------------------------------------------------
+# 1. Tokenization
+# ---------------------------------------------------
+
+# 1. Whitespace Tokenization
+whitespace_tokens = text.split()
+print("\nWhitespace Tokenization:\n", whitespace_tokens)
+
+
+# 2. Punctuation-based Tokenization
+punct_tokens = wordpunct_tokenize(text)
+print("\nPunctuation-based Tokenization:\n", punct_tokens)
+
+
+# 3. Treebank Tokenization
+treebank_tokenizer = TreebankWordTokenizer()
+treebank_tokens = treebank_tokenizer.tokenize(text)
+
+print("\nTreebank Tokenization:\n", treebank_tokens)
+
+
+# 4. Tweet Tokenization
+tweet_tokenizer = TweetTokenizer()
+tweet_tokens = tweet_tokenizer.tokenize(text)
+
+print("\nTweet Tokenization:\n", tweet_tokens)
+
+
+# 5. MWE Tokenization (Multi-Word Expression)
+mwe_tokenizer = MWETokenizer([('Machine', 'Learning'), ('New', 'York')])
+
+mwe_tokens = mwe_tokenizer.tokenize(text.split())
+
+print("\nMWE Tokenization:\n", mwe_tokens)
+
+
+# ---------------------------------------------------
+# 2. Stemming
+# ---------------------------------------------------
+
+words = word_tokenize(text)
+
+# Porter Stemmer
+porter = PorterStemmer()
+porter_stems = [porter.stem(word) for word in words]
+
+print("\nPorter Stemming:\n", porter_stems)
+
+
+# Snowball Stemmer
+snowball = SnowballStemmer("english")
+snowball_stems = [snowball.stem(word) for word in words]
+
+print("\nSnowball Stemming:\n", snowball_stems)
+
+
+# ---------------------------------------------------
+# 3. Lemmatization
+# ---------------------------------------------------
+
+lemmatizer = WordNetLemmatizer()
+
+lemmatized_words = [lemmatizer.lemmatize(word) for word in words]
+
+print("\nLemmatization:\n", lemmatized_words)

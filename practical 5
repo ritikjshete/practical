@@ -1,0 +1,86 @@
+# ---------------------------------------------------
+# Step-1: Import Library
+# ---------------------------------------------------
+
+import pandas as pd
+
+
+# ---------------------------------------------------
+# Step-2: Data
+# ---------------------------------------------------
+
+data = [
+    {"word": "playing", "root": "play"},
+    {"word": "walked", "root": "walk"},
+    {"word": "happiness", "root": "happy"},
+    {"word": "unlucky", "root": "lucky"}
+]
+
+df = pd.DataFrame(data)
+
+print(df)
+
+
+# ---------------------------------------------------
+# Step-3: Function to Analyze Morphology
+# ---------------------------------------------------
+
+def analyze_morphology(word, root):
+
+    # Case 1: Suffix added
+    # Example: playing = play + ing
+    if word.startswith(root):
+
+        delete = ""
+        add = word[len(root):]
+
+    # Case 2: Prefix added
+    # Example: unlucky = un + lucky
+    elif word.endswith(root):
+
+        delete = ""
+        add = word[:-len(root)]
+
+    # Case 3: Word modified
+    # Example: happiness = happy → happi + ness
+    else:
+
+        i = 0
+
+        while (
+            i < min(len(word), len(root))
+            and word[i] == root[i]
+        ):
+            i += 1
+
+        delete = root[i:]
+        add = word[i:]
+
+    return delete, add
+
+
+# ---------------------------------------------------
+# Step-4: Create Add-Delete Table
+# ---------------------------------------------------
+
+rows = []
+
+for item in data:
+
+    word = item["word"]
+    root = item["root"]
+
+    delete, add = analyze_morphology(word, root)
+
+    rows.append({
+        "Word": word,
+        "Root": root,
+        "Delete": delete,
+        "Add": add
+    })
+
+
+df = pd.DataFrame(rows)
+
+print("Add-Delete Table:\n")
+print(df)
